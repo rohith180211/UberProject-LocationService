@@ -4,7 +4,7 @@ package org.example.uberprojectlocationservice.controllers;
 import org.example.uberprojectlocationservice.dto.DriverLocationDto;
 import org.example.uberprojectlocationservice.dto.getNearbyDriversRequestDto;
 import org.example.uberprojectlocationservice.dto.saveDriverLocationRequestDto;
-import org.example.uberprojectlocationservice.services.LocationserviceImplementation;
+import org.example.uberprojectlocationservice.services.LocationServiceInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +16,9 @@ import java.util.List;
 @RequestMapping("/api/location")
 public class LocationController {
 
-    private LocationserviceImplementation locationService;
+    private LocationServiceInterface locationService;
 
-    public LocationController(LocationserviceImplementation locationService) {
+    public LocationController(LocationServiceInterface locationService) {
         this.locationService = locationService;
     }
 
