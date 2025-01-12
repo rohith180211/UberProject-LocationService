@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class LocationserviceImplementation implements LocationServiceInterface{
+public class LocationServiceImplementation implements LocationServiceInterface{
 
     private static final String DRIVER_GEO_OPS_KEY = "drivers";
     private static final Double SEARCH_RADIUS = 5.0;
@@ -20,7 +20,7 @@ public class LocationserviceImplementation implements LocationServiceInterface{
 
 
 
-    public LocationserviceImplementation(StringRedisTemplate stringRedisTemplate) {
+    public LocationServiceImplementation(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
@@ -32,8 +32,8 @@ public class LocationserviceImplementation implements LocationServiceInterface{
                 new RedisGeoCommands.GeoLocation<>(
                         driverId,
                         new Point(
-                                longitude,
-                                latitude)));
+                                latitude,
+                                longitude)));
         return true;
     }
 
@@ -41,7 +41,7 @@ public class LocationserviceImplementation implements LocationServiceInterface{
     public List<DriverLocationDto> getNearbyDrivers(Double latitude, Double longitude) {
         GeoOperations<String, String> geoOps = stringRedisTemplate.opsForGeo();
         Distance radius = new Distance(SEARCH_RADIUS, Metrics.KILOMETERS);
-        Circle within = new Circle(new Point(longitude, latitude), radius);
+        Circle within = new Circle(new Point(latitude, longitude), radius);
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = geoOps.radius(DRIVER_GEO_OPS_KEY, within);
         List<DriverLocationDto> drivers = new ArrayList<>();
@@ -49,8 +49,8 @@ public class LocationserviceImplementation implements LocationServiceInterface{
             Point point = geoOps.position(DRIVER_GEO_OPS_KEY, result.getContent().getName()).get(0);
             DriverLocationDto driverLocation = DriverLocationDto.builder()
                     .driverId(result.getContent().getName())
-                    .latitude(point.getY())
-                    .longitude(point.getX())
+                    .latitude(point.getX())
+                    .longitude(point.getY())
                     .build();
             drivers.add(driverLocation);
         }
