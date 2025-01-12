@@ -25,7 +25,7 @@ public class LocationController {
     @PostMapping("/drivers")
     public ResponseEntity<Boolean> saveDriverLocation(@RequestBody saveDriverLocationRequestDto saveDriverLocationRequestDto) {
         try {
-            Boolean response = locationService.saveDriverLocation(saveDriverLocationRequestDto.getDriverId(), saveDriverLocationRequestDto.getLatitude(), saveDriverLocationRequestDto.getLongitude());
+            Boolean response = locationService.saveDriverLocation(saveDriverLocationRequestDto.getDriverId(),saveDriverLocationRequestDto.getLongitude(),saveDriverLocationRequestDto.getLatitude());
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,7 +37,8 @@ public class LocationController {
     @PostMapping ("/nearby/drivers")
     public ResponseEntity<List<DriverLocationDto>> getNearbyDrivers(@RequestBody getNearbyDriversRequestDto nearbyDriversRequestDto) {
         try {
-            List<DriverLocationDto> drivers = locationService.getNearbyDrivers(nearbyDriversRequestDto.getLatitude(), nearbyDriversRequestDto.getLongitude());
+            List<DriverLocationDto> drivers = locationService.getNearbyDrivers(  nearbyDriversRequestDto.getLatitude(),
+                    nearbyDriversRequestDto.getLongitude());
             return new ResponseEntity<>(drivers, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());

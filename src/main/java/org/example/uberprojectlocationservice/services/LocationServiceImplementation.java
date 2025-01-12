@@ -32,8 +32,7 @@ public class LocationServiceImplementation implements LocationServiceInterface{
                 new RedisGeoCommands.GeoLocation<>(
                         driverId,
                         new Point(
-                                latitude,
-                                longitude)));
+                                latitude,longitude)));
         return true;
     }
 
@@ -41,11 +40,11 @@ public class LocationServiceImplementation implements LocationServiceInterface{
     public List<DriverLocationDto> getNearbyDrivers(Double latitude, Double longitude) {
         GeoOperations<String, String> geoOps = stringRedisTemplate.opsForGeo();
         Distance radius = new Distance(SEARCH_RADIUS, Metrics.KILOMETERS);
-        Circle within = new Circle(new Point(latitude, longitude), radius);
+        Circle within = new Circle(new Point(longitude, latitude), radius); // Corrected order
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> results = geoOps.radius(DRIVER_GEO_OPS_KEY, within);
         List<DriverLocationDto> drivers = new ArrayList<>();
-        for(GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
+        for (GeoResult<RedisGeoCommands.GeoLocation<String>> result : results) {
             Point point = geoOps.position(DRIVER_GEO_OPS_KEY, result.getContent().getName()).get(0);
             DriverLocationDto driverLocation = DriverLocationDto.builder()
                     .driverId(result.getContent().getName())
@@ -56,4 +55,5 @@ public class LocationServiceImplementation implements LocationServiceInterface{
         }
         return drivers;
     }
+
 }
